@@ -73,7 +73,7 @@ struct GhostWall {
 
 /**
  * The description of a point bonus stores its value, its position,
- * a flag indicating whether it is present on the board or not, 
+ * a flag indicating whether it is present on the board or not,
  * and the time left before it regenerates again if not present.
  */
 
@@ -86,7 +86,7 @@ struct PointBonus {
 
 /**
  * The description of a stone bonus stores its position,
- * a flag indicating whether it is present on the board or not, 
+ * a flag indicating whether it is present on the board or not,
  * and the time left before it regenerates again if not present.
  * Value will be always 0 in this original game. Future versions
  * may change it.
@@ -101,7 +101,7 @@ struct StoneBonus {
 
 /**
  * The description of a ScopeBonus stores its position,
- * a flag indicating whether it is present on the board or not, 
+ * a flag indicating whether it is present on the board or not,
  * and the time left before it regenerates again if not present.
  * Value will be always 0 in this original game. Future versions
  * may change it.
@@ -116,7 +116,7 @@ struct ScopeBonus {
 
 /**
  * The description of a AttackBonus stores its position,
- * a flag indicating whether it is present on the board or not, 
+ * a flag indicating whether it is present on the board or not,
  * and the time left before it regenerates again if not present.
  * Value will be always 0 in this original game. Future versions
  * may change it.
@@ -131,7 +131,7 @@ struct AttackBonus {
 
 /**
  * The description of a DefenseBonus stores its position,
- * a flag indicating whether it is present on the board or not, 
+ * a flag indicating whether it is present on the board or not,
  * and the time left before it regenerates again if not present.
  * Value will be always 0 in this original game. Future versions
  * may change it.

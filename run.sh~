@@ -11,7 +11,7 @@ if [ "$#" -ge 1 ]; then
   game=$1
 fi
 
-Player1=Player
+Player1=Demo
 Player2=Demo
 Player3=Demo
 Player4=Demo
