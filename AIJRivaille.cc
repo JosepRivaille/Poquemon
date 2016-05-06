@@ -98,7 +98,6 @@ struct PLAYER_NAME : public Player {
     Pos nearest_Bag(Pos current_pos)
     {
       Pos new_pos = {-1, -1};
-      //Graph whereFrom(rows(), Node_vector(cols(), new_pos));
       Pos whereFrom[rows()][cols()];
       whereFrom[current_pos.i][current_pos.j] = new_pos;
       Matrix visited(rows(), Column(cols(), False));
@@ -148,7 +147,7 @@ struct PLAYER_NAME : public Player {
         }
         //Below
         if (pos_ok(i, j+1) && !visited[i][j+1]) {
-          if (cell_type(i, j-1) != Wall) {
+          if (cell_type(i, j+1) != Wall) {
             whereFrom[i][j+1] = new_pos;
             if (cell_type(i, j+1) == Point) {
               new_pos = {i, j+1};
