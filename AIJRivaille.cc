@@ -63,13 +63,11 @@ struct PLAYER_NAME : public Player {
 
       if (p.alive) {
         Pos current_pos = p.pos;
-        //cerr << "Now, we are in " << current_pos.i << ":" << current_pos.j << endl;
-        Pos new_pos = nearest_Bag(current_pos);
-        //cerr << "<-- Next cell is this one" << endl;
-        //usleep(10000000);
-        cerr << endl;
-        if (new_pos.i == -1 && new_pos.j == -1) move(rand_dir(None));
+        Dir attack_direction = find_poquemon(current_pos, p.scope, p.attack);
+        if (attack_direction != None) attack(attack_direction);
         else {
+          Pos new_pos = nearest_Bag(current_pos);
+          if (new_pos.i == -1 && new_pos.j == -1) new_pos = nearest_bonus(current_pos);
           Dir movement_direction = choose_direction(new_pos, current_pos);
           move(movement_direction);
         }
@@ -92,6 +90,139 @@ struct PLAYER_NAME : public Player {
       if (current_pos.j - 1 == new_pos.j) return DIRS[2];
       if (current_pos.j + 1 == new_pos.j) return DIRS[3];
       return rand_dir(None);
+    }
+
+    Dir find_poquemon(Pos current_pos, int my_scope, int my_attack)
+    {
+      int offset, idCell;
+      Poquemon enemy;
+      Dir DIRS[] = {Top, Bottom, Left, Right};
+      Pos aux;
+      // Look for an enemy above us
+      offset = 1;
+      aux = current_pos;
+      --aux.i;
+      while (pos_ok(aux) && cell_type(aux) != Wall && my_scope >= offset) {
+        int idCell = cell_id(aux);
+        if (idCell != -1) {
+          enemy = poquemon(idCell);
+          if (enemy.defense <= my_attack) return DIRS[0];
+        }
+        --aux.i; ++offset;
+      }
+      // Look for an enemy below us
+      offset = 1;
+      aux = current_pos;
+      ++aux.i;
+      while (pos_ok(aux) && cell_type(aux) != Wall && my_scope >= offset) {
+        int idCell = cell_id(aux);
+        if (idCell != -1) {
+          enemy = poquemon(idCell);
+          if (enemy.defense <= my_attack) return DIRS[1];
+        }
+        ++aux.i; ++offset;
+      }
+      // Look for an enemy on left
+      offset = 1;
+      aux = current_pos;
+      --aux.j;
+      while (pos_ok(aux) && cell_type(aux) != Wall && my_scope >= offset) {
+        int idCell = cell_id(aux);
+        if (idCell != -1) {
+          enemy = poquemon(idCell);
+          if (enemy.defense <= my_attack) return DIRS[2];
+        }
+        --aux.j; ++offset;
+      }
+      // Look for an enemy on right
+      offset = 1;
+      aux = current_pos;
+      ++aux.j;
+      while (pos_ok(aux) && cell_type(aux) != Wall && my_scope >= offset) {
+        int idCell = cell_id(aux);
+        if (idCell != -1) {
+          enemy = poquemon(idCell);
+          if (enemy.defense <= my_attack) return DIRS[3];
+        }
+        ++aux.j; ++offset;
+      }
+      return None;
+    }
+
+    Pos nearest_bonus(Pos current_pos)
+    {
+      Pos new_pos = {-1, -1};
+      Pos whereFrom[rows()][cols()];
+      whereFrom[current_pos.i][current_pos.j] = new_pos;
+      Matrix visited(rows(), Column(cols(), False));
+      queue<Pos> Q;
+      Q.push(current_pos);
+      visited[current_pos.i][current_pos.j] = True;
+      while (!Q.empty()) {
+        new_pos = Q.front();
+        Q.pop();
+        int i = new_pos.i;
+        int j = new_pos.j;
+        //Left
+        if (pos_ok(i-1, j) && !visited[i-1][j]) {
+          if (cell_type(i-1, j) != Wall) {
+            whereFrom[i-1][j] = new_pos;
+            if (cell_type(i-1, j) != Empty) {
+              new_pos = {i-1, j};
+              goto backtrack;
+            }
+            Q.push({i-1, j});
+          }
+          visited[i-1][j] = True;
+        }
+        //Right
+        if (pos_ok(i+1, j) && !visited[i+1][j]) {
+          if (cell_type(i+1, j) != Wall) {
+            whereFrom[i+1][j] = new_pos;
+            if (cell_type(i+1, j) != Empty) {
+              new_pos = {i+1, j};
+              goto backtrack;
+            }
+            Q.push({i+1, j});
+          }
+          visited[i+1][j] = True;
+        }
+        //Above
+        if (pos_ok(i, j-1) && !visited[i][j-1]) {
+          if (cell_type(i, j-1) != Wall) {
+            whereFrom[i][j-1] = new_pos;
+            if (cell_type(i, j-1) != Empty) {
+              new_pos = {i, j-1};
+              goto backtrack;
+            }
+            Q.push({i, j-1});
+          }
+          visited[i][j-1] = True;
+        }
+        //Below
+        if (pos_ok(i, j+1) && !visited[i][j+1]) {
+          if (cell_type(i, j+1) != Wall) {
+            whereFrom[i][j+1] = new_pos;
+            if (cell_type(i, j+1) != Empty) {
+              new_pos = {i, j+1};
+              goto backtrack;
+            }
+            Q.push({i, j+1});
+          }
+          visited[i][j+1] = True;
+        }
+      }
+      return {-1, -1};
+      backtrack:
+      Pos result = new_pos;
+      new_pos = whereFrom[result.i][result.j];
+      while(1) {
+        cerr << result.i << ":" << result.j << " ";
+        Pos aux = whereFrom[new_pos.i][new_pos.j];
+        if (aux.i == -1 && aux.j == -1) return result;
+        result = new_pos;
+        new_pos = aux;
+      }
     }
 
     // From the current point, returns nearest positon where there is a bag.

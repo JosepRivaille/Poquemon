@@ -15,6 +15,10 @@ enum Dir {
     None, Top, Bottom, Left, Right
 };
 
+inline bool ok(Dir d) {
+  return d == None or d == Top or d == Bottom or d == Left or d == Right;
+}
+
 
 /**
  * Conversion from Dir to char.
@@ -43,7 +47,6 @@ inline Dir c2d (char c) {
         case 'l':   return Left;
         case 'r':   return Right;
     }
-    _unreachable();
     return None;
 }
 

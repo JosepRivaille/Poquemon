@@ -15,6 +15,10 @@ enum AType {
 	Undefined, Moving, Attacking
 };
 
+inline bool ok(AType a) {
+  return a == Undefined or a == Moving or a == Attacking;
+}
+
 /**
  * Conversion from AType to char.
  */
