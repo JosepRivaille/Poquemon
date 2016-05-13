@@ -9,7 +9,7 @@ using namespace std;
  * Write the name of your player and save this file
  * with the same name and .cc extension.
  */
-#define PLAYER_NAME Colin
+#define PLAYER_NAME Kagaho
 
 
 
@@ -248,7 +248,7 @@ struct PLAYER_NAME : public Player {
         if (pos_ok(i-1, j) && !visited[i-1][j]) {
           if (cell_type(i-1, j) != Wall) {
             whereFrom[i-1][j] = new_pos;
-            if (cell_type(i-1, j) == Point) {
+            if (cell_type(i-1, j) == Point || cell_type(i-1, j) == Attack) {
               new_pos = {i-1, j};
               goto backtrack;
             }
@@ -260,7 +260,7 @@ struct PLAYER_NAME : public Player {
         if (pos_ok(i+1, j) && !visited[i+1][j]) {
           if (cell_type(i+1, j) != Wall) {
             whereFrom[i+1][j] = new_pos;
-            if (cell_type(i+1, j) == Point) {
+            if (cell_type(i+1, j) == Point || cell_type(i+1, j) == Attack) {
               new_pos = {i+1, j};
               goto backtrack;
             }
@@ -272,7 +272,7 @@ struct PLAYER_NAME : public Player {
         if (pos_ok(i, j-1) && !visited[i][j-1]) {
           if (cell_type(i, j-1) != Wall) {
             whereFrom[i][j-1] = new_pos;
-            if (cell_type(i, j-1) == Point) {
+            if (cell_type(i, j-1) == Point || cell_type(i, j-1) == Attack) {
               new_pos = {i, j-1};
               goto backtrack;
             }
@@ -284,7 +284,7 @@ struct PLAYER_NAME : public Player {
         if (pos_ok(i, j+1) && !visited[i][j+1]) {
           if (cell_type(i, j+1) != Wall) {
             whereFrom[i][j+1] = new_pos;
-            if (cell_type(i, j+1) == Point) {
+            if (cell_type(i, j+1) == Point || cell_type(i, j+1) == Attack) {
               new_pos = {i, j+1};
               goto backtrack;
             }
